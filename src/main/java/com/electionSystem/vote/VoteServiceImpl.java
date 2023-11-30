@@ -2,6 +2,7 @@ package com.electionSystem.vote;
 
 import com.electionSystem.candidate.Candidate;
 import com.electionSystem.candidate.CandidateService;
+import com.electionSystem.candidate.dto.CandidateResponse;
 import com.electionSystem.exceptions.customExceptions.ResourceAlreadyExistsException;
 import com.electionSystem.userManager.user.UserService;
 import com.electionSystem.userManager.user.Users;
@@ -57,7 +58,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public List<CandidateVoteResult> getVoteResultsByPositionId(Long positionId) {
-        List<Candidate> candidates = candidateService.getCandidatesByPositionId(positionId);
+        List<CandidateResponse> candidates = candidateService.getCandidatesByPositionId(positionId);
 
         return candidates.stream()
                 .map(candidate -> {
@@ -66,7 +67,7 @@ public class VoteServiceImpl implements VoteService {
 
                     CandidateVoteResult result = new CandidateVoteResult();
                     result.setCandidateId(candidate.getId());
-                    result.setCandidateName(candidate.getUser().getUsername());
+                    result.setCandidateName(candidate.getUser());
                     result.setVoteCount(voteCount);
 
                     return result;

@@ -1,6 +1,5 @@
 package com.electionSystem.vote.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

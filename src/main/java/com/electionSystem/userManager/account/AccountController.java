@@ -24,9 +24,9 @@ public class AccountController {
         return accountService.changePassword(changePassword);
     }
 
-    @PutMapping({"/reset-password/{email}"})
-    public ResponseEntity<ApiResponse> changePassword(@PathVariable String email, @RequestBody @Valid ResetPassword resetPassword) {
-        return accountService.resetPassword(email, resetPassword);
+    @PutMapping({"/reset-password/{username}"})
+    public ResponseEntity<ApiResponse> changePassword(@PathVariable String username, @RequestBody @Valid ResetPassword resetPassword) {
+        return accountService.resetPassword(username, resetPassword);
     }
 
 }

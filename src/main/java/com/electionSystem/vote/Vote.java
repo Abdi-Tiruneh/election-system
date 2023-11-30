@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ES_vote")
-@SQLDelete(sql = "UPDATE ES_vote SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 @Data
 @NoArgsConstructor
 public class Vote {
