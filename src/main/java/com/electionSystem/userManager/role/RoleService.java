@@ -16,7 +16,7 @@ public class RoleService {
 
     // Retrieves all roles.
     public List<Role> getRoles() {
-        return roleRepository.findAll(Sort.by(Sort.Direction.ASC, "roleId"));
+        return roleRepository.findAll();
     }
 
     // Retrieves a role by id.
