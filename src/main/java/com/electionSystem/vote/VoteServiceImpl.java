@@ -4,6 +4,8 @@ import com.electionSystem.candidate.Candidate;
 import com.electionSystem.candidate.CandidateService;
 import com.electionSystem.candidate.dto.CandidateResponse;
 import com.electionSystem.exceptions.customExceptions.ResourceAlreadyExistsException;
+import com.electionSystem.position.Position;
+import com.electionSystem.position.PositionService;
 import com.electionSystem.userManager.user.UserService;
 import com.electionSystem.userManager.user.Users;
 import com.electionSystem.vote.dto.CandidateVoteResult;
@@ -19,12 +21,14 @@ public class VoteServiceImpl implements VoteService {
     private final VoteRepository voteRepository;
     private final CandidateService candidateService;
     private final UserService userService;
+    private final PositionService positionService;
 
     @Autowired
-    public VoteServiceImpl(VoteRepository voteRepository, CandidateService candidateService, UserService userService) {
+    public VoteServiceImpl(VoteRepository voteRepository, CandidateService candidateService, UserService userService, PositionService positionService) {
         this.voteRepository = voteRepository;
         this.candidateService = candidateService;
         this.userService = userService;
+        this.positionService = positionService;
     }
 
     @Override
@@ -33,27 +37,29 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Vote vote(VoteRequest voteRequest) {
+    public void vote(VoteRequest voteRequest) {
 
-        Long userId = voteRequest.getUserId();
+        Long voterId = voteRequest.getVoterId();
         Long candidateId = voteRequest.getCandidateId();
+        Long positionId = voteRequest.getPositionId();
 
-        // Check if the user has already voted for the candidate
-        if (voteRepository.existsByVoterIdAndCandidateId(userId, candidateId))
-            throw new ResourceAlreadyExistsException("Already voted for this candidate");
+        System.out.println(voteRepository.existsByVoterIdAndPositionId(voterId, positionId));
 
-        Users voter = userService.getUserById(userId);
+        // Check if the user has already voted for the position
+        if (voteRepository.existsByVoterIdAndPositionId(voterId, positionId))
+            throw new ResourceAlreadyExistsException("Already voted for this position");
+
+        Users voter = userService.getUserById(voterId);
         Candidate candidate = candidateService.getCandidateById(candidateId);
+        Position position = positionService.getPositionById(positionId);
 
-        Vote vote = new Vote(voter, candidate);
+        Vote vote = new Vote(voter, candidate,position);
         voteRepository.save(vote);
 
         // Update the candidate's votes
         List<Vote> candidateVotes = candidate.getVotes();
         candidateVotes.add(vote);
         candidate.setVotes(candidateVotes);
-
-        return vote;
     }
 
     @Override

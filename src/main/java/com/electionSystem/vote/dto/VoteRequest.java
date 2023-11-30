@@ -7,8 +7,11 @@ import lombok.Data;
 public class VoteRequest {
 
     @NotNull
-    private Long userId;
+    private Long voterId;
 
     @NotNull
     private Long candidateId;
+
+    @NotNull
+    private Long positionId;
 }

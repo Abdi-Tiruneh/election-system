@@ -1,10 +1,10 @@
 package com.electionSystem.vote;
 
+import com.electionSystem.utils.ApiResponse;
 import com.electionSystem.vote.dto.CandidateVoteResult;
 import com.electionSystem.vote.dto.VoteRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +22,9 @@ public class VoteController {
     }
 
     @PostMapping("/vote")
-    public ResponseEntity<Vote> vote(@RequestBody @Valid VoteRequest voteRequest) {
-        Vote voted = voteService.vote(voteRequest);
-        return new ResponseEntity<>(voted, HttpStatus.CREATED);
+    public ResponseEntity<?> vote(@RequestBody @Valid VoteRequest voteRequest) {
+        voteService.vote(voteRequest);
+        return ApiResponse.success("Voted Successfully");
 
     }
 

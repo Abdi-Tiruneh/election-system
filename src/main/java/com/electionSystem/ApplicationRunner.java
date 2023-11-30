@@ -48,7 +48,7 @@ public class ApplicationRunner {
 
     private List<Role> createUserRole() {
         Role admin = new Role("ADMIN", "Full administrative access to manage and oversee the entire online election system");
-        Role voter = new Role("VOTER", "Access to participate in voting");
+        Role voter = new Role("USER", "Access to participate in voting");
 
         return List.of(admin, voter);
     }

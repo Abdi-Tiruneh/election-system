@@ -3,19 +3,18 @@ package com.electionSystem.vote;
 import com.electionSystem.candidate.Candidate;
 import com.electionSystem.position.Position;
 import com.electionSystem.userManager.user.Users;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ES_vote")
+@SQLDelete(sql = "UPDATE ES_vote SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Data
 @NoArgsConstructor
 public class Vote {
@@ -30,14 +29,23 @@ public class Vote {
 
     @ManyToOne
     @JoinColumn(name = "candidate_id", nullable = false)
-    @JsonIgnore
     private Candidate candidate;
+
+    @ManyToOne
+    @JoinColumn(name = "position_id", nullable = false)
+    private Position position;
 
     private LocalDateTime voteDateTime;
 
-    public Vote(Users voter, Candidate candidate) {
+    @Column(name = "deleted")
+    private boolean deleted;
+
+    public Vote(Users voter, Candidate candidate, Position position) {
         this.voter = voter;
         this.candidate = candidate;
+        this.position = position;
         this.voteDateTime = LocalDateTime.now();
     }
 }
+
+

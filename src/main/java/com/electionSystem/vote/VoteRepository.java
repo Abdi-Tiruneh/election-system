@@ -9,5 +9,5 @@ import java.util.List;
 public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> findByCandidateId(Long candidateId);
 
-    boolean existsByVoterIdAndCandidateId(Long voterId, Long candidateId);
+    boolean existsByVoterIdAndPositionId(Long voterId,Long positionId);
 }
