@@ -4,14 +4,14 @@ spring:
     name: ELECTION SYSTEM
 
   #db configuration
-  datasource:
-    url: jdbc:postgresql://localhost:5432/bug_tracker
-    username: postgres
-    password: 1313
 #  datasource:
-#    url: jdbc:postgresql://dpg-clepur08ffis73crjhmg-a.oregon-postgres.render.com/dbname_nwtn
-#    username: dbname_nwtn_user
-#    password: 2oQAQjAUezbD4YjNUythIFTI5etTB7jR
+#    url: jdbc:postgresql://localhost:5432/bug_tracker
+#    username: postgres
+#    password: 1313
+  datasource:
+    url: jdbc:postgresql://dpg-clepur08ffis73crjhmg-a.oregon-postgres.render.com/dbname_nwtn
+    username: dbname_nwtn_user
+    password: 2oQAQjAUezbD4YjNUythIFTI5etTB7jR
   # Hibernate orm configuration
 
   jpa:
