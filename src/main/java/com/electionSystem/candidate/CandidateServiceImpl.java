@@ -1,6 +1,7 @@
 package com.electionSystem.candidate;
 
 import com.electionSystem.candidate.dto.CandidateReq;
+import com.electionSystem.candidate.dto.CandidateResponse;
 import com.electionSystem.exceptions.customExceptions.ResourceAlreadyExistsException;
 import com.electionSystem.exceptions.customExceptions.ResourceNotFoundException;
 import com.electionSystem.position.Position;
@@ -26,29 +27,34 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public List<Candidate> getAllCandidates() {
-        return candidateRepository.findAll();
+    public List<CandidateResponse> getAllCandidates() {
+        List<Candidate> candidateList = candidateRepository.findAll();
+
+        return candidateList
+                .stream()
+                .map(CandidateResponse::toResponse)
+                .toList();
     }
 
     @Override
     public Candidate getCandidateById(Long id) {
         return candidateRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Vote not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Candidate not found"));
+
     }
 
     @Override
-    public Candidate getCandidateByUserId(Long userId) {
-        return candidateRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Vote not found"));
+    public List<CandidateResponse> getCandidatesByPositionId(Long positionId) {
+        List<Candidate> candidateList = candidateRepository.findByPositionId(positionId);
+
+        return candidateList
+                .stream()
+                .map(CandidateResponse::toResponse)
+                .toList();
     }
 
     @Override
-    public List<Candidate> getCandidatesByPositionId(Long positionId) {
-        return candidateRepository.findByPositionId(positionId);
-    }
-
-    @Override
-    public Candidate createCandidate(CandidateReq candidateReq) {
+    public CandidateResponse createCandidate(CandidateReq candidateReq) {
 
         Long userId = candidateReq.getUserId();
         Long positionId = candidateReq.getPositionId();
@@ -61,7 +67,8 @@ public class CandidateServiceImpl implements CandidateService {
         Position position = positionService.getPositionById(positionId);
 
         Candidate candidate = new Candidate(user, position);
-        return candidateRepository.save(candidate);
+        candidate = candidateRepository.save(candidate);
+        return CandidateResponse.toResponse(candidate);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.electionSystem.candidate;
 import com.electionSystem.position.Position;
 import com.electionSystem.userManager.user.Users;
 import com.electionSystem.vote.Vote;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,7 +37,7 @@ public class Candidate {
     private Position position;
 
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
-    private List<Vote> votes;
+    private List<Vote> votes = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at")

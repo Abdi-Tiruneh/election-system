@@ -1,8 +1,7 @@
 package com.electionSystem.candidate;
 
 import com.electionSystem.candidate.dto.CandidateReq;
-import com.electionSystem.position.Position;
-import com.electionSystem.userManager.user.Users;
+import com.electionSystem.candidate.dto.CandidateResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/candidates")
-@Tag(name = "Vote API.")
+@Tag(name = "Candidate API.")
 public class CandidateController {
 
     private final CandidateService candidateService;
@@ -23,28 +22,19 @@ public class CandidateController {
     }
 
     @GetMapping
-    public List<Candidate> getAllCandidates() {
+    public List<CandidateResponse> getAllCandidates() {
         return candidateService.getAllCandidates();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Candidate> getCandidateById(@PathVariable Long id) {
-        return ResponseEntity.ok(candidateService.getCandidateById(id));
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Candidate> getCandidateByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(candidateService.getCandidateByUserId(userId));
-    }
 
     @GetMapping("/position/{positionId}")
-    public ResponseEntity<List<Candidate>> getCandidatesByPositionId(@PathVariable Long positionId) {
+    public ResponseEntity<List<CandidateResponse>> getCandidatesByPositionId(@PathVariable Long positionId) {
         return ResponseEntity.ok(candidateService.getCandidatesByPositionId(positionId));
     }
 
     @PostMapping
-    public ResponseEntity<Candidate> createCandidate(@RequestBody @Valid CandidateReq candidateReq) {
-        Candidate createdCandidate = candidateService.createCandidate(candidateReq);
+    public ResponseEntity<CandidateResponse> createCandidate(@RequestBody @Valid CandidateReq candidateReq) {
+        CandidateResponse createdCandidate = candidateService.createCandidate(candidateReq);
         return new ResponseEntity<>(createdCandidate, HttpStatus.CREATED);
     }
 
