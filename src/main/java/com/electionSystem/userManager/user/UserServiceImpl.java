@@ -39,13 +39,13 @@ public class UserServiceImpl implements UserService {
         if (!loggedInUser.getRole().getRoleName().equalsIgnoreCase("ADMIN"))
             throw new ForbiddenException("Access Denied: Only administrators are authorized to create new users.");
 
-        if (userRepository.findByUsername(userReq.getEmail()).isPresent())
-            throw new ResourceAlreadyExistsException("Email is already taken");
+        if (userRepository.findByUsername(userReq.getUsername()).isPresent())
+            throw new ResourceAlreadyExistsException("Username is already taken");
 
         Role role = roleService.getRoleByRoleName(userReq.getRoleName());
 
         Users user = Users.builder()
-                .username(userReq.getEmail())
+                .username(userReq.getUsername())
                 .fullName(userReq.getFullName())
                 .password(passwordEncoder.encode(userReq.getPassword()))
                 .role(role)
@@ -64,14 +64,13 @@ public class UserServiceImpl implements UserService {
         if (updateReq.getFullName() != null)
             user.setFullName(updateReq.getFullName());
 
-        // use email as username
-        // Update it if provided email is different from the current email
-        if (updateReq.getEmail() != null && !user.getUsername().equals(updateReq.getEmail())) {
-            // Check if the new Phone Number is already taken
-            if (userRepository.findByUsername(updateReq.getEmail()).isPresent())
-                throw new ResourceAlreadyExistsException("Email is already taken");
+        // Update it if provided username is different from the current username
+        if (updateReq.getUsername() != null && !user.getUsername().equals(updateReq.getUsername())) {
+            // Check if the new username is already taken
+            if (userRepository.findByUsername(updateReq.getUsername()).isPresent())
+                throw new ResourceAlreadyExistsException("Username is already taken");
 
-            user.setUsername(updateReq.getEmail());
+            user.setUsername(updateReq.getUsername());
         }
 
         user = userRepository.save(user);
@@ -79,8 +78,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users getUserByEmail(String email) {
-        return userRepository.findByUsername(email)
+    public Users getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
@@ -88,6 +87,12 @@ public class UserServiceImpl implements UserService {
     public Users getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        getUserById(id);
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -99,7 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable
     public List<UserResponse> getAllUsers() {
-        List<Users> users = userRepository.findAll(Sort.by(Sort.Order.asc("userId")));
+        List<Users> users = userRepository.findAll(Sort.by(Sort.Order.asc("id")));
         return users.stream().
                 map(UserResponse::toResponse).
                 toList();

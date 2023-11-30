@@ -21,20 +21,17 @@ import java.util.Collections;
 
 @Entity
 @Table(name = "ES_users")
-@SQLDelete(sql = "UPDATE ES_users SET deleted = true WHERE user_Id=?")
+@SQLDelete(sql = "UPDATE ES_users SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Users implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_Id")
-    private Long userId;
+    private Long id;
 
-    //use email as username
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -47,6 +44,7 @@ public class Users implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonIgnore
     private Role role;
 
     @Column(name = "last_logged_in")
@@ -61,6 +59,7 @@ public class Users implements UserDetails {
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted")
+    @JsonIgnore
     private boolean deleted;
 
     @Override

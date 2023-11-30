@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
         if (!inUser.getRole().getRoleName().equalsIgnoreCase("ADMIN"))
             throw new ForbiddenException("Access Denied: Only administrators are authorized to reset password.");
 
-        Users user = userService.getUserByEmail(email);
+        Users user = userService.getUserByUsername(email);
 
         user.setPassword(passwordEncoder.encode(resetPassword.getNewPassword()));
         userRepository.save(user);
